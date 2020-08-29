@@ -1,0 +1,7 @@
+D:\Rog!to\School\Uni\Repos\MyBank\MyBank\bin\Debug\MyBank.exe.config
+D:\Rog!to\School\Uni\Repos\MyBank\MyBank\bin\Debug\MyBank.exe
+D:\Rog!to\School\Uni\Repos\MyBank\MyBank\bin\Debug\MyBank.pdb
+D:\Rog!to\School\Uni\Repos\MyBank\MyBank\obj\Debug\Program.csprojAssemblyReference.cache
+D:\Rog!to\School\Uni\Repos\MyBank\MyBank\obj\Debug\Program.csproj.CoreCompileInputs.cache
+D:\Rog!to\School\Uni\Repos\MyBank\MyBank\obj\Debug\MyBank.exe
+D:\Rog!to\School\Uni\Repos\MyBank\MyBank\obj\Debug\MyBank.pdb
