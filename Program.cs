@@ -21,7 +21,6 @@ namespace MyBank
             Console.WriteLine("[1] LogIn");
             Console.WriteLine("[2] SignUp");
 
-
             switch (Console.ReadLine())
             {                
                 case "1":
@@ -37,7 +36,6 @@ namespace MyBank
                     Home();
                     break;
             }
-
         }
 
         public static void TryAgainGoBackMenu()
@@ -60,7 +58,6 @@ namespace MyBank
             }
         }
 
-
         public static void ForSwitchDefaultCase()
         {
             Console.WriteLine("You have to choose one of the given options");
@@ -68,9 +65,5 @@ namespace MyBank
             Console.ReadKey();
             Console.Clear();
         }
-
-
-
-
     }
 }

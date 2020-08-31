@@ -9,33 +9,30 @@ namespace MyBank
     static class Bank
     {
         static Dictionary<long, User> ListOfUsers = new Dictionary<long, User>();
-
         
-        public static void GiveCredit(int quantity, long id, string from)
-        {            
-            if (!ListOfUsers.ContainsKey(id))
+        public static void AddCredit(int quantity, long id, string from)
+        {
+            if (ListOfUsers.ContainsKey(id))
             {
-                WrongKey();
-                return;
+                User.HandleCredit(quantity, ListOfUsers[id], from);
+                Console.WriteLine("Process Successful");
             }
             else
             {
-                User.ForReceiveOrRemoveCredit(quantity, ListOfUsers[id], from);
-                Console.WriteLine("Process Sucessful");
+                WrongKey();
             }
         }
         public static void RemoveCredit(int quantity, long id, string from)
         {
-            if (!ListOfUsers.ContainsKey(id))
+            if (ListOfUsers.ContainsKey(id))
             {
-                WrongKey();
-                return;
+                quantity = quantity - (quantity * 2);
+                User.HandleCredit(quantity, ListOfUsers[id], from);
+                Console.WriteLine("Process Sucessful");
             }
             else
             {
-                quantity = quantity - (quantity * 2);
-                User.ForReceiveOrRemoveCredit(quantity, ListOfUsers[id], from);
-                Console.WriteLine("Process Sucessful");
+                WrongKey();
             }
         }
 
@@ -48,7 +45,7 @@ namespace MyBank
                 Console.WriteLine("Failed Process");
                 return;
             }
-            GiveCredit(quantity, idTo, nameFrom);
+            AddCredit(quantity, idTo, nameFrom);
 
         }
 
@@ -59,7 +56,6 @@ namespace MyBank
             Console.ReadKey();
             return;
         }
-        
 
 
         public static void SignIn()
@@ -112,7 +108,6 @@ namespace MyBank
             return finalId;
         }
 
-
         public static void LogIn()
         {
             Console.WriteLine("{0, 20}", "Logging In...");
@@ -145,7 +140,10 @@ namespace MyBank
             }
         }
 
-
+        private enum Cases
+        {
+            logOut, addUser, addCredit, removeCredit, usersList, lastOperations, deleteAccount
+        }
         public static void AdminMainMenu()
         {
             Console.WriteLine();
@@ -153,16 +151,16 @@ namespace MyBank
             Console.WriteLine("[2] Give Credit to User");
             Console.WriteLine("[3] Remove Credit from User");
             Console.WriteLine("[4] Show List of Users");
-            Console.WriteLine("[5] Show Last Operations of an User");                   //Continuar con otras acciones
+            Console.WriteLine("[5] Show Last Operations of an User");
             Console.WriteLine("[6] Delete an User Account");
 
             Console.WriteLine("[0] Log Out");
 
-            switch (Console.ReadLine())
+            switch (int.Parse(Console.ReadLine()))
             {
-                case "1":
+                case (int)Cases.addUser:
                     Console.WriteLine("Enter the new Id Number");
-                    long id = long.Parse(Console.ReadLine());                    
+                    long id = long.Parse(Console.ReadLine());
                     Console.WriteLine("Enter the Name");
                     string name = Console.ReadLine();
                     Console.WriteLine("Enter the Password");
@@ -173,19 +171,19 @@ namespace MyBank
                     Console.WriteLine("Process Sucessful");
                     break;
 
-                case "2":
+                case (int)Cases.addCredit:
                     ForUsersCreditCases(true);
                     break;
 
-                case "3":
+                case (int)Cases.removeCredit:
                     ForUsersCreditCases(false);
                     break;
 
-                case "4":
+                case (int)Cases.usersList:
                     ShowListOUsers();
                     break;
 
-                case "5":
+                case (int)Cases.lastOperations:
                     Console.WriteLine("Enter the id of the User");
                     long key = long.Parse(Console.ReadLine());
 
@@ -194,7 +192,7 @@ namespace MyBank
                     else User.ShowLastOperations(ListOfUsers[key]);
                     break;
 
-                case "6":
+                case (int)Cases.deleteAccount:
                     Console.WriteLine("Enter the id of the User to Delete");
                     long idToDelete = long.Parse(Console.ReadLine());
 
@@ -207,7 +205,7 @@ namespace MyBank
                     }
                     break;
 
-                case "0":
+                case (int)Cases.logOut:
                     Console.Clear();
                     Program.Home();
                     break;
@@ -228,7 +226,7 @@ namespace MyBank
             int quantity = int.Parse(Console.ReadLine());
 
             if (giveOrRemove)
-                GiveCredit(quantity, id, "Bank");
+                AddCredit(quantity, id, "Bank");
             else RemoveCredit(quantity, id, "Bank");
         }
         private static void ShowListOUsers()
@@ -263,9 +261,7 @@ namespace MyBank
             {
                 Console.WriteLine("The entered Id has not the correct format");
                 return false;
-            }
-
-            
+            }            
         }
 
         public static void SetBorrow(User user)
@@ -332,7 +328,7 @@ namespace MyBank
             switch (Console.ReadLine())
             {
                 case "1":
-                    GiveCredit(quantity, user.ID, "Borrow");
+                    AddCredit(quantity, user.Id, "Borrow");
                     Console.WriteLine("Press Enter to continue...");
                     Console.ReadKey();
                     Console.Clear();

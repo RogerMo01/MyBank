@@ -9,7 +9,7 @@ namespace MyBank
     class User
     {
         public int ActualBalance = 0;
-        public long ID { get; private set; }
+        public long Id { get; private set; }
         public string UserName { get; private set; }
         public string Password { get; private set; }
         public string Name { get; private set; }
@@ -17,49 +17,54 @@ namespace MyBank
 
         public User(long id, string password, string name)
         {
-            ID = id;
+            Id = id;
             Password = password;
             Name = name;
         }
-
-        private static int counter = 0;
+        
         public static void CheckUserPassword(User user)
         {
-            Console.WriteLine("Hello {0}, Enter your password", user.Name);
-            string password = Console.ReadLine();
+            int counter = 0;
 
-            
-
-            if (!String.Equals(password, user.Password))
+            while (counter < 3)
             {
-                Console.WriteLine("Your password does't match, do it again");
-                Console.WriteLine("Press Enter to continue...");
-                Console.ReadKey();
-                Console.Clear();
+                Console.WriteLine("Hello {0}, Enter your password", user.Name);
+                string password = Console.ReadLine();
 
-                counter++;
-                if (counter == 3)
+                if (password != user.Password)
                 {
-                    counter = 0;
-                    Console.WriteLine("You entered a wrong password three consecutive times");
+                    Console.WriteLine("Your password does't match, do it again");
                     Console.WriteLine("Press Enter to continue...");
                     Console.ReadKey();
                     Console.Clear();
-                    Console.WriteLine("Would you try to Log In again, or go back to Main menu");
-                    Program.TryAgainGoBackMenu();
+
+                    counter++;
+                    if (counter == 3)
+                    {
+                        counter = 0;
+                        Console.WriteLine("You entered a wrong password three consecutive times");
+                        Console.WriteLine("Press Enter to continue...");
+                        Console.ReadKey();
+                        Console.Clear();
+                        Console.WriteLine("Would you try to Log In again, or go back to Main menu");
+                        Program.TryAgainGoBackMenu();
+                    }
                 }
-                
-                CheckUserPassword(user);
+                else
+                {
+                    Console.Clear();
+                    Console.WriteLine("This is your user interface");
+                    Console.WriteLine("You always have to write the number of the option you want to select");
+                    UserMainMenu(user);
+                }
             }
-            else
-            {
-                Console.Clear();
-                Console.WriteLine("This is your user interface");
-                Console.WriteLine("You always have to write the number of the option you want to select");
-                UserMainMenu(user);
-            }            
         }
 
+
+        private enum Cases
+        {
+            logOut, checkBalance, checkLastOperations, transferCredit, askForBorrow
+        }
         public static void UserMainMenu(User user)
         {
             Console.WriteLine();
@@ -70,23 +75,21 @@ namespace MyBank
             Console.WriteLine("[0] Log Out");
 
 
-
-
-            switch (Console.ReadLine())
+            switch (int.Parse(Console.ReadLine()))
             {
-                case "1":
+                case (int)Cases.checkBalance:
                     Console.WriteLine("Balance: {0}", user.ActualBalance);
                     UserMainMenu(user);
                     break;
 
-                case "2":
+                case (int)Cases.checkLastOperations:
                     ShowLastOperations(user);
                     UserMainMenu(user);
                     break;
 
-                case "3":
+                case (int)Cases.transferCredit:
                     Console.WriteLine("Enter the recipient Id");
-                    long id = long.Parse(Console.ReadLine());                    
+                    long id = long.Parse(Console.ReadLine());
                     Console.WriteLine("Enter the quantity to transfer");
                     int quantity = int.Parse(Console.ReadLine());
 
@@ -95,14 +98,14 @@ namespace MyBank
                         Console.WriteLine("Your actual balance is minor than the quantity you want to transfer");
                         break;
                     }
-                    Bank.Transfers(user.ID, id, quantity, user.Name);
+                    Bank.Transfers(user.Id, id, quantity, user.Name);
 
                     break;
-                case "4":
+                case (int)Cases.askForBorrow:
                     Bank.SetBorrow(user);
                     break;
 
-                case "0":
+                case (int)Cases.logOut:
                     Console.Clear();
                     Program.Home();
                     break;
@@ -133,7 +136,7 @@ namespace MyBank
             }
         }
 
-        public static void ForReceiveOrRemoveCredit(int quantity, User user, string from)
+        public static void HandleCredit(int quantity, User user, string from)
         {
             int balance = user.ActualBalance;
             if (balance + quantity < 0)
